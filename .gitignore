@@ -3,4 +3,89 @@
 /cmake-build-debug/
 /libdsp/build/
 /libdsp/cmake-build-debug/
-... (trimmed) ...
+/build.ninja
+/CMakeCache.txt
+/CMakeFiles/
+/cmake_install.cmake
+/compile_commands.json
+/*.ninja
+*.ninja_log
+
+# System and Editor files
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Cache directories
+.cache/
+.cache/**
+
+# C++ build outputs
+*.o
+*.obj
+*.so
+*.a
+*.dll
+*.dylib
+libdsp/*.so
+libdsp/*.a
+libdsp/*.pyd
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+pip-wheel-metadata/
+venv/
+.venv/
+env/
+ENV/
+.Python
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Project datasets, intermediate results and logs
+/results/
+results/*
+results/*.npz
+results/*.csv
+models/
+models/*.joblib
+models/*.pkl
+logs.csv
+
+# Notebook outputs and checkpoints
+*.nbpreview
+
+# Distribution
+build/
+dist/
+
+# Misc
+*.tmp
+*.bak
+
+# Ignore generated Python C extension from local build (platform-specific naming)
+python_src/libdsp*.so
+python_src/libdsp*.pyd
+
+# Ignore CLion files
+.clion/
+.idea/
+
+# Ignore tests/coverage artifacts
+htmlcov/
+.coverage
+.coverage.*
+
+# Optional local overrides
+.local.env
+
+# Keep these files under version control
+!.gitignore
