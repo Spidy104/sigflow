@@ -21,28 +21,69 @@ SigFlow is a hybrid C++/Python sandbox for simulating wireless channels, generat
 11. [Documentation & resources](#documentation--resources)
 12. [Troubleshooting](#troubleshooting)
 
+## Features
+
+---
+
+### Signal Generation
+
+- QPSK baseband IQ generation  
+- Configurable length, randomness, and normalization  
+
+### DSP Block
+
+- FIR filtering  
+- FFT analysis  
+- Feature extraction (temporal + spectral)  
+
+### Channel Models
+
+- AWGN with controllable SNR  
+- Rayleigh fading (multipath convolution)  
+
+### ML Block
+
+- Random Forest modulation/SNR prediction  
+- Plug-and-play featurization  
+- Can be replaced with CNN/LSTM models  
+
+### Metrics & Evaluation
+
+- BER calculation  
+- Latency measurement  
+- Accuracy vs SNR  
+- Automated CSV logging  
+
+### Visualization
+
+- Frequency spectra  
+- Channel distortion plots  
+- Performance graphs (BER/SNR/Latency)  
+
+---
+
 ## Quickstart
 
 1. **Clone & submodules**
 
-	```bash
-	git clone https://github.com/Spidy104/sigflow.git
-	cd sigflow
-	```
+```bash
+git clone https://github.com/Spidy104/sigflow.git
+cd sigflow
+```
 
-2. **Install prerequisites**
+1. **Install prerequisites**
 
    - CMake ≥ 3.24, Ninja (optional but faster), a C++20 compiler (clang++ 14+/g++ 11+)
    - FFTW3 (double precision) and Eigen3 development headers
    - Python 3.10 with `numpy`, `scipy`, `scikit-learn`, `pandas`, `matplotlib`, `h5py`
 
-3. **Build + validate**
+1. **Build + validate**
 
-	```bash
-	cmake -S libdsp -B libdsp/build -GNinja -DCMAKE_BUILD_TYPE=Release
-	cmake --build libdsp/build
-	python validate_core.py
-	```
+```bash
+cmake -S libdsp -B libdsp/build -GNinja -DCMAKE_BUILD_TYPE=Release
+cmake --build libdsp/build
+python validate_core.py
+```
 
 ## Architecture at a glance
 
@@ -86,16 +127,16 @@ SigFlow is a hybrid C++/Python sandbox for simulating wireless channels, generat
 ## Requirements & setup
 
 1. Install FFTW3 and Eigen3 packages (e.g., `sudo apt install libfftw3-dev libeigen3-dev`).
-2. Install pybind11 headers (`pip install pybind11` or distribution packages).
-3. Create and activate a Python 3.10 virtual environment, then install Python dependencies:
+1. Install pybind11 headers (`pip install pybind11` or distribution packages).
+1. Create and activate a Python 3.10 virtual environment, then install Python dependencies:
 
-	```bash
-	python -m venv .venv
-	source .venv/bin/activate
-	pip install -r requirements.txt  # coming soon; for now install packages listed above
-	```
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt  # coming soon; for now install packages listed above
+```
 
-4. Export `PYTHONPATH` to include `python_src` if running scripts directly outside the repo root.
+1. Export `PYTHONPATH` to include `python_src` if running scripts directly outside the repo root.
 
 ## Building the C++ core
 
