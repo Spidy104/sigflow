@@ -1,0 +1,6 @@
+# CMake / build artifacts
+/build/
+/cmake-build-debug/
+/libdsp/build/
+/libdsp/cmake-build-debug/
+... (trimmed) ...
