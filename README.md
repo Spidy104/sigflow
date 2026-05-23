@@ -1,8 +1,8 @@
 # 🌊 SigFlow
 
-[![C++ Toolchain](https://img.shields.shields.shields.shields.shields.shields.shields.io/badge/C%2B%2B-20-blue.svg?style=flat-square&logo=c%2B%2B)](https://en.cppreference.com/w/cpp/20)
-[![Python Version](https://img.shields.shields.shields.shields.shields.shields.io/badge/Python-3.12%20%7C%203.13%20%7C%203.14-green.svg?style=flat-square&logo=python)](https://www.python.org/)
-[![Compiler](https://img.shields.shields.shields.shields.shields.shields.shields.io/badge/Compiler-MSVC%20%28VS%202022%29-orange.svg?style=flat-square&logo=microsoft-visual-studio)](https://visualstudio.microsoft.com/)
+[![C++ Toolchain](https://img.shields.shields.shields.shields.shields.io/badge/C%2B%2B-20-blue.svg?style=flat-square&logo=c%2B%2B)](https://en.cppreference.com/w/cpp/20)
+[![Python Version](https://img.shields.shields.shields.shields.shields.io/badge/Python-3.12%20%7C%203.13%20%7C%203.14-green.svg?style=flat-square&logo=python)](https://www.python.org/)
+[![Compiler](https://img.shields.shields.shields.shields.shields.shields.io/badge/Compiler-MSVC%20%28VS%202022%29-orange.svg?style=flat-square&logo=microsoft-visual-studio)](https://visualstudio.microsoft.com/)
 [![License](https://img.shields.shields.shields.shields.shields.shields.io/badge/License-MIT-purple.svg?style=flat-square)](LICENSE)
 
 **SigFlow** is a high-performance C++20 and Python RF signal processing and channel simulation toolkit. Designed for speed, reproducibility, and visual machine learning integration, SigFlow brings together hardware-accelerated DSP engines, complex multipath fading channel models, and modern Python deep-learning ready dataset pipelines.
@@ -19,6 +19,28 @@
     *   **Doppler Shift** with continuous, time-variant phase rotation.
 *   **📦 Clean Third-Party Integration**: Direct integration of **FFTW3** and **Google Test** using CMake's `FetchContent`. No external dependencies or package managers required.
 *   **🧠 Deep Learning Ready**: Complete dataset generation, pilot-aided channel estimation, MMSE equalization, and feature extraction (moments, instant frequency, histograms, log PSD bins) ready for neural network training.
+
+---
+
+## 📂 Repository Directory Structure
+
+```text
+SigFlow/
+├── .vscode/                 # IDE workspace parameters (MSVC IntelliSense configurations)
+├── libdsp/                  # Core C++20 DSP Library
+│   ├── include/             # C++ Header files (dsp.h, channel.h)
+│   ├── src/                 # C++ Implementation source & nanobind bindings
+│   ├── tests/               # Google Test suite (test_dsp.cpp, test_channel.cpp)
+│   └── build.ps1            # MSVC Windows C++ build & test execution script
+├── python_src/              # High-Level Python Packages
+│   ├── channel_estimation.py# Least-Squares Block estimation and MMSE equalizer
+│   ├── dataset.py           # Modulation mapping (QPSK, 8PSK, 16QAM), dataset generator, and features extractor
+│   ├── utils.py             # QPSK generators, hard decisions, pilots insertion and extraction
+│   └── config.py            # Global simulation, ML features, and channel system parameters
+├── test_pytest.py           # Fully integrated Pytest suite (63 test cases covering C++ and Python)
+├── test_all.py              # Manual verification and sanity check scripts
+└── pyproject.toml           # PEP 518/621 Python package configuration (scikit-build-core)
+```
 
 ---
 
@@ -117,7 +139,54 @@ print("Dataset Shape:", X.shape)
 
 # Extract statistics, instantaneous features, histograms, and PSD bins
 features = dataset.extract_features(X)
-print("Features Matrix Shape:", features.shape)  # Shape: (1600, N_features)
+print("Features Matrix Shape:", features.shape)  # Shape: (1600, 62)
+```
+
+### C++ Core: Processing Signals & Impairments
+You can use `libdsp` directly in native C++ projects. Link against `dsp_core` inside the built target:
+
+```cpp
+#include "dsp.h"
+#include "channel.h"
+#include <iostream>
+#include <vector>
+#include <complex>
+#include <span>
+
+int main() {
+    using namespace sigflow;
+    using cf32 = std::complex<float>;
+
+    // 1. Create a raw signal
+    std::vector<cf32> signal(1024, cf32(1.0f, 0.0f));
+    std::span<const cf32> signal_span(signal);
+
+    // 2. Apply a Rayleigh fading multipath channel with 15dB SNR and 100Hz Doppler
+    std::vector<cf32> impaired = channel::apply(signal_span, 15.0f, 8, 100.0f);
+    std::cout << "Impaired Signal Size: " << impaired.size() << std::endl;
+
+    // 3. Compute Normalized FFT of the impaired signal
+    std::vector<cf32> spectrum = dsp::process(std::span<const cf32>(impaired), "fft");
+    std::cout << "DC Spectrum Bin Magnitude: " << std::abs(spectrum[0]) << std::endl;
+
+    return 0;
+}
+```
+
+---
+
+## ⚙️ Performance Tuning & Multithreading
+
+The C++ core is optimized for parallel computation using OpenMP. By default, it will scale to utilize all available physical threads. To restrict or balance the processor usage (e.g. for cluster execution), set the standard OpenMP environment variable prior to execution:
+
+**In PowerShell:**
+```powershell
+$env:OMP_NUM_THREADS = 4
+```
+
+**In Linux/Bash (when compiling on alternative setups):**
+```bash
+export OMP_NUM_THREADS=4
 ```
 
 ---
