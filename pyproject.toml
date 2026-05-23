@@ -1,0 +1,49 @@
+[build-system]
+requires = ["scikit-build-core>=0.9", "nanobind>=2.2"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "sigflow"
+version = "0.0.1"
+description = "RF signal DSP simulation and modulation-classification toolkit"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.0",
+    "matplotlib>=3.8",
+    "nanobind>=2.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "scikit-build-core>=0.9",
+]
+
+# ---------------------------------------------------------------------------
+# scikit-build-core configuration
+# ---------------------------------------------------------------------------
+[tool.scikit-build]
+# CMakeLists.txt lives inside libdsp/
+cmake.source-dir = "libdsp"
+cmake.build-type = "Release"
+
+# Install the built .pyd + FFTW DLL into python_src/ inside the wheel.
+# The CMakeLists.txt install() rules use DESTINATION "." and scikit-build-core
+# prepends this install-dir, so everything lands in python_src/.
+wheel.install-dir = "python_src"
+
+# Include the Python source package in the wheel alongside the extension
+wheel.packages = ["python_src"]
+
+# Editable installs: rebuild the extension when source changes
+build-dir = "build"
+editable.rebuild = true
+editable.mode = "redirect"
+
+[tool.uv]
+# uv manages Python deps; scikit-build-core handles the C++ extension build.
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["."]
+python_files = ["test_pytest.py", "test_all.py"]

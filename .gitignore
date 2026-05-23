@@ -1,0 +1,76 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+*.pyd
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# MSVC / Visual Studio / Build artifacts
+libdsp/build/
+build/
+bin/
+obj/
+x64/
+out/
+cmake-build-debug/
+CMakeSettings.json
+.vs/
+.idea/
+libdsp/.idea/
+*.user
+*.suo
+*.db
+*.opendb
+
+# Python virtual environment
+.venv/
+venv/
+env/
+ENV/
+
+# Python caching & artifacts
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+dist/
+*.egg-info/
+
+# Project-specific ignores (compiled extension outputs in source)
+python_src/libdsp.pyd
+python_src/libfftw3f-3.dll
+results/
+
+# OS generated files
+.DS_Store
+Thumbs.db
